@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBook - Modern Healthcare Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d9b5;
+            --primary-dark: #00b495;
+            --primary-light: #e6fff9;
+            --secondary: #6366f1;
+            --dark: #0f172a;
+            --text: #475569;
+            --text-light: #64748b;
+            --muted: #94a3b8;
+            --border: #e2e8f0;
+            --bg: #ffffff;
+            --bg-light: #f8fafc;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 217, 181, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--bg);
+            overflow-x: hidden;
+        }
+
+        /* ==================== NAVIGATION ==================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .logo-text span:first-child {
+            color: var(--dark);
+        }
+
+        .logo-text span:last-child {
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 217, 181, 0.3);
+        }
+
+        .btn-primary a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 217, 181, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary a {
+          text-decoration: none;
+          color: var(--primary);
+        }
+
+        .btn-secondary a:hover {
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--text);
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-text:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdfb 100%);
+            padding: 8rem 1.5rem 5rem;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(0, 217, 181, 0.05), transparent);
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--dark);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            max-width: 550px;
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-feature {
+            background: white;
+            padding: 1.25rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .hero-feature:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .hero-feature-content h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-feature-content p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image-main {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card-1 {
+            top: 10%;
+            left: -5%;
+        }
+
+        .floating-card-2 {
+            bottom: 15%;
+            right: -5%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating-card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .floating-card-content h5 {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .floating-card-content p {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        /* ==================== STATS SECTION ==================== */
+        .stats {
+            background: white;
+            padding: 3rem 1.5rem;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION HEADER ==================== */
+        .section {
+            padding: 6rem 1.5rem;
+        }
+
+        .section-alt {
+            background: var(--bg-light);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header h2 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ==================== SPECIALIZATIONS ==================== */
+        .specializations-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .spec-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spec-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .spec-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .spec-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .spec-card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-light), #e0f2fe);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .spec-card:hover .spec-card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .spec-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .spec-card p {
+            font-size: 1rem;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        /* ==================== DOCTORS GRID ==================== */
+        .doctors-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .doctor-image-wrapper {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e0f2fe, #ddd6fe);
+        }
+
+        .doctor-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .doctor-card:hover .doctor-image {
+            transform: scale(1.05);
+        }
+
+        .doctor-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .doctor-favorite {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+        }
+
+        .doctor-favorite:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .doctor-content {
+            padding: 1.5rem;
+        }
+
+        .doctor-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-specialty {
+            color: var(--primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .doctor-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .rating-stars span {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .rating-count {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .experience-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .doctor-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .doctor-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .doctor-info-item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .doctor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .doctor-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .price-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .doctor-footer .btn {
+            padding: 0.75rem 1.5rem;
+        }
+
+        /* ==================== WHY CHOOSE ==================== */
+        .why-choose-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .why-choose-content h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .why-choose-content h2 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .why-choose-content > p {
+            font-size: 1.15rem;
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+
+        .why-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .why-item {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .why-item-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .why-item-content h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .why-item-content p {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .why-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .why-stat-box {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .why-stat-box:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .why-stat-box h3 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-stat-box p {
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* ==================== HOW IT WORKS ==================== */
+        .how-it-works-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            font-size: 1rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ==================== TESTIMONIALS ==================== */
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .testimonial-rating {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-rating span {
+            color: #fbbf24;
+            font-size: 1.25rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.05rem;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), #e0f2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .testimonial-author-info h5 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-author-info p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ==================== CTA SECTION ==================== */
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 6rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-content p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-buttons .btn {
+            background: white;
+            color: var(--primary);
+            font-size: 1.05rem;
+            padding: 1rem 2.5rem;
+        }
+        .cta-buttons .btn a {
+          text-decoration: none;
+          color: var(--primary);
+        }
+
+        .cta-buttons .btn:hover {
+            background: var(--bg-light);
+            transform: translateY(-4px);
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            background: var(--dark);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 4rem 1.5rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .footer-column h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-container,
+            .why-choose-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-header h2,
+            .why-choose-content h2,
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+
+            .hero-features {
+                grid-template-columns: 1fr;
+            }
+
+            .doctors-grid,
+            .specializations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .why-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 6rem 1rem 4rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-text">
+                    <span>MediBook</span>
+                    <span>Healthcare Platform</span>
+                </div>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#doctors">Find Doctors</a></li>
+                <li><a href="#specializations">Specializations</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+<a href="/login" class="btn btn-text">Login</a>
+<a href="/register" class="btn btn-primary">Sign Up</a>
+                <button class="mobile-menu-btn">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Your Health, <span class="highlight">Our Priority</span></h1>
+                <p>Book appointments with the best doctors in your area. Easy scheduling, instant confirmations, and seamless healthcare at your fingertips.</p>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">1</div>
+                        <div class="hero-feature-content">
+                            <h4>Easy Booking</h4>
+                            <p>Schedule in just a few clicks</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">2</div>
+                        <div class="hero-feature-content">
+                            <h4>Verified Doctors</h4>
+                            <p>Certified professionals only</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">3</div>
+                        <div class="hero-feature-content">
+                            <h4>24/7 Support</h4>
+                            <p>Always here to help you</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">4</div>
+                        <div class="hero-feature-content">
+                            <h4>Find Specialists</h4>
+                            <p>15+ specializations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">/
+                    <button class="btn btn-primary"><a href="/register">Get Started</a></button>
+                    <button class="btn btn-secondary"><a href="#about">Learn More</a></button>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <img src="https://imgs.search.brave.com/uLrxcDUtoJLT0BulHeWK8-PdMn44DZXvS9QpVfyAXCU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG5p/Lmljb25zY291dC5j/b20vaWxsdXN0cmF0/aW9uL3ByZW1pdW0v/dGh1bWIvZG9jdG9y/LWlsbHVzdHJhdGlv/bi1zdmctZG93bmxv/YWQtcG5nLTI4OTYw/MzAucG5n" alt="Healthcare" class="hero-image-main">
+                
+                <div class="floating-card floating-card-1">
+                    <div class="floating-card-icon">👨‍⚕️</div>
+                    <div class="floating-card-content">
+                        <h5>Available Doctors</h5>
+                        <p>500+</p>
+                    </div>
+                </div>
+
+                <div class="floating-card floating-card-2">
+                    <div class="floating-card-icon">⭐</div>
+                    <div class="floating-card-content">
+                        <h5>Patient Rating</h5>
+                        <p>4.9/5.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Expert Doctors</p>
+            </div>
+            <div class="stat-item">
+                <h3>50k+</h3>
+                <p>Happy Patients</p>
+            </div>
+            <div class="stat-item">
+                <h3>4.9</h3>
+                <p>Average Rating</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Support Available</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SPECIALIZATIONS -->
+    <section class="section section-alt" id="specializations">
+        <div class="section-header">
+            <h2>Browse by <span class="highlight">Specialization</span></h2>
+            <p>Find the right specialist for your medical needs from our wide range of medical departments</p>
+        </div>
+
+        <div class="specializations-grid">
+            <div class="spec-card">
+                <div class="spec-card-icon">1</div>
+                <h3>Cardiology</h3>
+                <p>Expert care for heart and cardiovascular conditions</p>
+                <div class="spec-card-meta">
+                    <span>12 Doctors available</span>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-card-icon">2</div>
+                <h3>Dermatology</h3>
+                <p>Skin, hair, and nail condition specialists</p>
+                <div class="spec-card-meta">
+                    <span>8 Doctors available</span>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-card-icon">3</div>
+                <h3>Pediatrics</h3>
+                <p>Comprehensive healthcare for children</p>
+                <div class="spec-card-meta">
+                    <span>15 Doctors available</span>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-card-icon">4</div>
+                <h3>Orthopedics</h3>
+                <p>Bone, joint, and muscle care specialists</p>
+                <div class="spec-card-meta">
+                    <span>10 Doctors available</span>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-card-icon">5</div>
+                <h3>Neurology</h3>
+                <p>Brain and nervous system specialists</p>
+                <div class="spec-card-meta">
+                    <span>7 Doctors available</span>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-card-icon">6</div>
+                <h3>General Medicine</h3>
+                <p>Primary care for common ailments</p>
+                <div class="spec-card-meta">
+                    <span>20 Doctors available</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOP DOCTORS -->
+    <section class="section" id="doctors">
+        <div class="section-header">
+            <h2>Top Rated <span class="highlight">Doctors</span></h2>
+            <p>Highly qualified professionals you can trust for your healthcare</p>
+        </div>
+
+        <div class="doctors-grid">
+            <div class="doctor-card">
+                <div class="doctor-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400" alt="Dr. Sarah Mitchell" class="doctor-image">
+                </div>
+                <div class="doctor-content">
+                    <h3>Dr. Sarah Mitchell</h3>
+                    <div class="doctor-specialty">Cardiologist</div>
+                    <div class="doctor-rating">
+                        <div class="rating-stars">
+                        </div>
+                        <span class="rating-text">4.9</span>
+                        <span class="rating-count">(127 reviews)</span>
+                        <span class="experience-badge">15 yrs experience</span>
+                    </div>
+                    <div class="doctor-info">
+                        <div class="doctor-info-item">
+                            <span>Downtown Medical Center</span>
+                        </div>
+                        <div class="doctor-info-item">
+                            <span>Mon-Fri: 9:00 AM - 5:00 PM</span>
+                        </div>
+                    </div>
+                    <div class="doctor-footer">
+                        <div class="doctor-price">
+                            <span class="price-label">Consultation Fee</span>
+                            <span class="price-value">$118</span>
+                        </div>
+                        <button class="btn btn-primary">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="doctor-card">
+                <div class="doctor-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400" alt="Dr. James Anderson" class="doctor-image">
+                </div>
+                <div class="doctor-content">
+                    <h3>Dr. James Anderson</h3>
+                    <div class="doctor-specialty">Dermatologist</div>
+                    <div class="doctor-rating">
+                        <span class="rating-text">4.8</span>
+                        <span class="rating-count">(203 reviews)</span>
+                        <span class="experience-badge">12 yrs experience</span>
+                    </div>
+                    <div class="doctor-info">
+                        <div class="doctor-info-item">
+                            <span>Main Street Clinic</span>
+                        </div>
+                        <div class="doctor-info-item">
+                            <span>Mon-Sat: 10:00 AM - 6:00 PM</span>
+                        </div>
+                    </div>
+                    <div class="doctor-footer">
+                        <div class="doctor-price">
+                            <span class="price-label">Consultation Fee</span>
+                            <span class="price-value">$125</span>
+                        </div>
+                        <button class="btn btn-primary">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="doctor-card">
+                <div class="doctor-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400" alt="Dr. Emily Chen" class="doctor-image">
+                </div>
+                <div class="doctor-content">
+                    <h3>Dr. Emily Chen</h3>
+                    <div class="doctor-specialty">Pediatrician</div>
+                    <div class="doctor-rating">
+                        <span class="rating-text">5.0</span>
+                        <span class="rating-count">(89 reviews)</span>
+                        <span class="experience-badge">10 yrs experience</span>
+                    </div>
+                    <div class="doctor-info">
+                        <div class="doctor-info-item">
+                            <span>City Hospital</span>
+                        </div>
+                        <div class="doctor-info-item">
+                            <span>Mon-Fri: 8:00 AM - 4:00 PM</span>
+                        </div>
+                    </div>
+                    <div class="doctor-footer">
+                        <div class="doctor-price">
+                            <span class="price-label">Consultation Fee</span>
+                            <span class="price-value">$108</span>
+                        </div>
+                        <button class="btn btn-primary">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section section-alt">
+        <div class="section-header">
+            <h2>How It <span class="highlight">Works</span></h2>
+            <p>Simple steps to book your appointment and get the care you need</p>
+        </div>
+
+        <div class="how-it-works-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Search for Doctors</h3>
+                <p>Browse through our extensive list of verified doctors by specialization, location, or availability</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Choose Time Slot</h3>
+                <p>Select a convenient appointment time from the doctor's available schedule</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Book Appointment</h3>
+                <p>Complete your booking with instant confirmation and appointment details</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Get Treatment</h3>
+                <p>Visit the doctor at scheduled time and receive quality healthcare</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="section" id="about">
+        <div class="why-choose-container">
+            <div class="why-choose-content">
+                <h2>Why Choose <span class="highlight">MediBook</span>?</h2>
+                <p>We're committed to making healthcare accessible, convenient, and efficient for everyone</p>
+
+                <div class="why-list">
+                    <div class="why-item">
+                        <div class="why-item-icon">✓</div>
+                        <div class="why-item-content">
+                            <h4>Verified Healthcare Professionals</h4>
+                            <p>All doctors are certified and undergo thorough verification process</p>
+                        </div>
+                    </div>
+
+                    <div class="why-item">
+                        <div class="why-item-icon">⚡</div>
+                        <div class="why-item-content">
+                            <h4>Instant Appointment Confirmation</h4>
+                            <p>Get immediate confirmation for your appointments without any delay</p>
+                        </div>
+                    </div>
+
+                    <div class="why-item">
+                        <div class="why-item-icon">🔒</div>
+                        <div class="why-item-content">
+                            <h4>Secure & Private</h4>
+                            <p>Your medical information is protected with industry-standard encryption</p>
+                        </div>
+                    </div>
+
+                    <div class="why-item">
+                        <div class="why-item-icon">⭐</div>
+                        <div class="why-item-content">
+                            <h4>Quality Assurance</h4>
+                            <p>High standards of care with patient feedback and quality metrics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-stats">
+                <div class="why-stat-box">
+                    <h3>500+</h3>
+                    <p>Verified Doctors</p>
+                </div>
+                <div class="why-stat-box">
+                    <h3>50,000+</h3>
+                    <p>Happy Patients</p>
+                </div>
+                <div class="why-stat-box">
+                    <h3>20+</h3>
+                    <p>Specializations</p>
+                </div>
+                <div class="why-stat-box">
+                    <h3>98%</h3>
+                    <p>Satisfaction Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section section-alt">
+        <div class="section-header">
+            <h2>What Our <span class="highlight">Patients Say</span></h2>
+            <p>Real experiences from people who trust MediBook for their healthcare needs</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+                </div>
+                <p class="testimonial-text">"MediBook made it so easy to find a great cardiologist. The booking process was smooth, and the doctor was excellent. Highly recommended!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">JD</div>
+                    <div class="testimonial-author-info">
+                        <h5>John Davis</h5>
+                        <p>Patient since 2023</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+                </div>
+                <p class="testimonial-text">"As a busy professional, I appreciate how quick and convenient it is to book appointments. The 24/7 support is a lifesaver!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">SM</div>
+                    <div class="testimonial-author-info">
+                        <h5>Sarah Martinez</h5>
+                        <p>Patient since 2022</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+                </div>
+                <p class="testimonial-text">"Found an amazing pediatrician for my kids through MediBook. The platform is user-friendly and the doctors are top-notch!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">RK</div>
+                    <div class="testimonial-author-info">
+                        <h5>Rachel Kim</h5>
+                        <p>Patient since 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta" id="contact">
+        <div class="cta-content">
+            <h2>Ready to Take Control of Your Health?</h2>
+            <p>Book your first appointment today and experience hassle-free healthcare with trusted professionals</p>
+            <div class="cta-buttons">
+                <button class="btn"><a href="/contact">Get Started Today</a></button>
+                <button class="btn"><a href="#doctors">Browse Doctors</a></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>MediBook</h3>
+                    <p>Your trusted partner for convenient and accessible healthcare. Book appointments with verified doctors anytime, anywhere.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon">f</a>
+                        <a href="#" class="social-icon">t</a>
+                        <a href="#" class="social-icon">in</a>
+                        <a href="#" class="social-icon">ig</a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Find Doctors</a></li>
+                        <li><a href="#">Specializations</a></li>
+                        <li><a href="#">Book Appointment</a></li>
+                        <li><a href="#">Patient Portal</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Specializations</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Cardiology</a></li>
+                        <li><a href="#">Dermatology</a></li>
+                        <li><a href="#">Pediatrics</a></li>
+                        <li><a href="#">Orthopedics</a></li>
+                        <li><a href="#">Neurology</a></li>
+                        <li><a href="#">General Medicine</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📧 support@medibook.com</li>
+                        <li>📞 +1 (555) 123-4567</li>
+                        <li>📍 123 Healthcare Ave<br>Medical District, NY 10001</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 MediBook. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Favorite button toggle
+        document.querySelectorAll('.doctor-favorite').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.textContent = this.textContent === '♡' ? '♥' : '♡';
+            });
+        });
+    </script>
+</body>
+</html>

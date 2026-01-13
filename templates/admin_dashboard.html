@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Clinic{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 20px;">
+    <h1 style="color: var(--dark-color); margin-bottom: 2rem;">Admin Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>{{ pending_count }}</h3>
+            <p>Pending Appointments</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>{{ doctors_count }}</h3>
+            <p>Active Doctors</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>{{ patients_count }}</h3>
+            <p>Registered Patients</p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>All Appointments</h2>
+        </div>
+        
+        {% if appointments %}
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>#{{ appointment['id'] }}</td>
+                        <td>
+                            {{ appointment['patient_name'] }}<br>
+                            <small style="color: #6b7280;">{{ appointment['patient_email'] }}</small>
+                        </td>
+                        <td>{{ appointment['doctor_name'] }}</td>
+                        <td>{{ appointment['specialization'] }}</td>
+                        <td>{{ appointment['appointment_date'] }}</td>
+                        <td>{{ appointment['appointment_time'] }}</td>
+                        <td>
+                            <span class="badge badge-{{ appointment['status'] }}">
+                                {{ appointment['status'].upper() }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if appointment['status'] == 'pending' %}
+                            <a href="{{ url_for('update_appointment_status', appointment_id=appointment['id'], status='confirmed') }}" 
+                               class="btn btn-success" 
+                               style="padding: 0.4rem 0.8rem; font-size: 0.875rem; margin-right: 0.5rem;">
+                                Confirm
+                            </a>
+                            <a href="{{ url_for('update_appointment_status', appointment_id=appointment['id'], status='cancelled') }}" 
+                               class="btn btn-danger" 
+                               style="padding: 0.4rem 0.8rem; font-size: 0.875rem;"
+                               onclick="return confirm('Are you sure you want to reject this appointment?')">
+                                Reject
+                            </a>
+                            {% elif appointment['status'] == 'confirmed' %}
+                            <a href="{{ url_for('update_appointment_status', appointment_id=appointment['id'], status='completed') }}" 
+                               class="btn btn-primary" 
+                               style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                Mark Complete
+                            </a>
+                            {% else %}
+                            <span style="color: #9ca3af;">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="padding: 2rem; text-align: center; color: var(--text-color);">No appointments found</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

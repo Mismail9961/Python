@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}My Appointments - Clinic{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 20px; background-color: #ffffff;">
+    <h1 style="color: #333; margin-bottom: 2rem; border-left: 5px solid #00d9b5; padding-left: 15px;">My Appointments</h1>
+    
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('doctors') }}" class="btn" style="background-color: #00d9b5; color: white; border: none; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">Book New Appointment</a>
+    </div>
+    
+    {% if appointments %}
+    <div class="card" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <div class="card-header" style="background-color: #f8f9fa; border-bottom: 2px solid #00d9b5; padding: 1rem;">
+            <h2 style="margin: 0; font-size: 1.25rem; color: #333;">Appointment History</h2>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #ffffff; text-align: left; border-bottom: 1px solid #eee;">
+                        <th style="padding: 15px;">Date</th>
+                        <th style="padding: 15px;">Time</th>
+                        <th style="padding: 15px;">Doctor</th>
+                        <th style="padding: 15px;">Specialization</th>
+                        <th style="padding: 15px;">Status</th>
+                        <th style="padding: 15px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 15px;">{{ appointment['appointment_date'] }}</td>
+                        <td style="padding: 15px;">{{ appointment['appointment_time'] }}</td>
+                        <td style="padding: 15px; font-weight: bold; color: #444;">{{ appointment['doctor_name'] }}</td>
+                        <td style="padding: 15px;">{{ appointment['specialization'] }}</td>
+                        <td style="padding: 15px;">
+                            {% set status_color = '#00d9b5' if appointment['status'] == 'confirmed' else '#ffc107' if appointment['status'] == 'pending' else '#6c757d' %}
+                            <span class="badge" style="background-color: {{ status_color }}; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase;">
+                                {{ appointment['status'] }}
+                            </span>
+                        </td>
+                        <td style="padding: 15px;">
+                            {% if appointment['status'] == 'pending' or appointment['status'] == 'confirmed' %}
+                            <a href="{{ url_for('cancel_appointment', appointment_id=appointment['id']) }}" 
+                               style="color: #dc3545; text-decoration: none; font-size: 0.875rem; border: 1px solid #dc3545; padding: 5px 10px; border-radius: 4px;"
+                               onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                 Cancel
+                            </a>
+                            {% else %}
+                            <span style="color: #9ca3af;">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="card text-center" style="padding: 4rem; background: white; border: 2px dashed #00d9b5; border-radius: 12px;">
+        <h3 style="color: #333; margin-bottom: 1rem;">No appointments found</h3>
+        <p style="color: #666; margin-bottom: 2rem;">You haven't booked any appointments yet.</p>
+        <a href="{{ url_for('doctors') }}" class="btn" style="background-color: #00d9b5; color: white; border: none; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold;">Browse Doctors</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

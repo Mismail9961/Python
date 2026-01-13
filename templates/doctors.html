@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Find Doctors - Clinic{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 20px; background-color: #ffffff;">
+    <h1 style="color: #333; margin-bottom: 2rem; border-left: 5px solid #00d9b5; padding-left: 15px;">Find a Doctor</h1>
+    
+    <div class="search-bar" style="margin-bottom: 3rem; background: #f9f9f9; padding: 1.5rem; border-radius: 10px;">
+        <form method="GET" action="{{ url_for('doctors') }}" class="search-form" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="Search by doctor name or specialization..."
+                   value="{{ request.args.get('search', '') }}"
+                   style="flex: 2; min-width: 250px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; outline-color: #00d9b5;">
+            
+            <select name="specialty" class="form-control" style="flex: 1; min-width: 150px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; outline-color: #00d9b5;">
+                <option value="">All Specializations</option>
+                {% for specialty in specialties %}
+                <option value="{{ specialty['specialization'] }}" 
+                        {% if request.args.get('specialty') == specialty['specialization'] %}selected{% endif %}>
+                    {{ specialty['specialization'] }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit" class="btn" style="background-color: #00d9b5; color: white; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold;">Search</button>
+        </form>
+    </div>
+    
+    {% if doctors %}
+    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+        {% for doctor in doctors %}
+        <div class="card doctor-card" style="background: white; border: 1px solid #eee; border-top: 4px solid #00d9b5; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="doctor-info">
+                <h3 style="color: #333; margin-top: 0; margin-bottom: 0.5rem;">{{ doctor['name'] }}</h3>
+                <p class="specialty" style="color: #00d9b5; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem;">
+                    {{ doctor['specialization'] }}
+                </p>
+                <div style="font-size: 0.9rem; color: #555; line-height: 1.6;">
+                    <p><strong>Qualifications:</strong> {{ doctor['qualifications'] }}</p>
+                    <p><strong>Experience:</strong> {{ doctor['experience'] }} years</p>
+                    <p><strong>Email:</strong> {{ doctor['email'] }}</p>
+                    <p><strong>Phone:</strong> {{ doctor['phone'] }}</p>
+                </div>
+            </div>
+            
+            <div class="doctor-actions" style="margin-top: 1.5rem;">
+                <a href="{{ url_for('book_appointment', doctor_id=doctor['id']) }}" 
+                   class="btn" 
+                   style="display: block; width: 100%; text-align: center; background-color: #00d9b5; color: white; border: none; padding: 12px 0; border-radius: 5px; text-decoration: none; font-weight: bold; transition: opacity 0.2s;">
+                    Book Appointment
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card text-center" style="padding: 4rem; background: white; border: 2px dashed #ddd; border-radius: 12px; text-align: center;">
+        <h3 style="color: #666;">No doctors found</h3>
+        <p style="color: #999;">Try adjusting your search criteria or specialization</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

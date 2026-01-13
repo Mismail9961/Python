@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Add Doctor - Clinic Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 20px;">
+    <h1 style="color: var(--dark-color); margin-bottom: 2rem;">Add New Doctor</h1>
+    
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <div class="card-header">
+            <h2>Doctor Information</h2>
+        </div>
+        
+        <form method="POST" action="{{ url_for('add_doctor') }}">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="specialization">Specialization *</label>
+                <input type="text" id="specialization" name="specialization" class="form-control" 
+                       placeholder="e.g., Cardiology, Pediatrics, Dermatology" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="qualifications">Qualifications *</label>
+                <input type="text" id="qualifications" name="qualifications" class="form-control" 
+                       placeholder="e.g., MD, MBBS, FACC" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="experience">Years of Experience *</label>
+                <input type="number" id="experience" name="experience" class="form-control" 
+                       min="0" max="50" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" class="form-control" required>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Add Doctor</button>
+                <a href="{{ url_for('manage_doctors') }}" class="btn" 
+                   style="flex: 1; background: #f3f4f6; color: var(--text-color); text-align: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

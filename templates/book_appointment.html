@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment - Clinic{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 20px; background-color: #ffffff;">
+    <h1 style="color: #333; margin-bottom: 2rem; border-left: 5px solid #00d9b5; padding-left: 15px;">Book Appointment</h1>
+    
+    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div class="card" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 1.5rem;">
+            <div class="card-header" style="border-bottom: 2px solid #00d9b5; margin-bottom: 1.5rem; padding-bottom: 0.5rem;">
+                <h2 style="font-size: 1.25rem; color: #333; margin: 0;">Doctor Information</h2>
+            </div>
+            
+            <div style="padding: 0;">
+                <h3 style="color: #00d9b5; margin-bottom: 1rem; font-size: 1.5rem;">{{ doctor['name'] }}</h3>
+                <div style="line-height: 1.8; color: #555;">
+                    <p style="margin: 0.5rem 0;"><strong>Specialization:</strong> <span style="color: #00d9b5; font-weight: 600;">{{ doctor['specialization'] }}</span></p>
+                    <p style="margin: 0.5rem 0;"><strong>Qualifications:</strong> {{ doctor['qualifications'] }}</p>
+                    <p style="margin: 0.5rem 0;"><strong>Experience:</strong> {{ doctor['experience'] }} years</p>
+                    <p style="margin: 0.5rem 0;"><strong>Email:</strong> {{ doctor['email'] }}</p>
+                    <p style="margin: 0.5rem 0;"><strong>Phone:</strong> {{ doctor['phone'] }}</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1.2rem; background: #f0fdfa; border-radius: 8px; border: 1px solid #ccf2ed;">
+                <h4 style="margin-bottom: 0.75rem; color: #008a74; font-size: 1rem;">Available Schedule</h4>
+                {% if schedules %}
+                    {% for schedule in schedules %}
+                    <p style="margin: 0.4rem 0; font-size: 0.9rem; color: #444;">
+                        <strong style="color: #333;">{{ schedule['day_of_week'] }}:</strong> 
+                        {{ schedule['start_time'] }} - {{ schedule['end_time'] }}
+                    </p>
+                    {% endfor %}
+                {% else %}
+                <p style="font-size: 0.9rem; color: #666;">Schedule not available</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 1.5rem;">
+            <div class="card-header" style="border-bottom: 2px solid #00d9b5; margin-bottom: 1.5rem; padding-bottom: 0.5rem;">
+                <h2 style="font-size: 1.25rem; color: #333; margin: 0;">Appointment Details</h2>
+            </div>
+            
+            <form method="POST" action="{{ url_for('book_appointment', doctor_id=doctor['id']) }}">
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label for="date" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #444;">Appointment Date *</label>
+                    <input type="date" 
+                           id="date" 
+                           name="date" 
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline-color: #00d9b5;"
+                           required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label for="time" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #444;">Appointment Time *</label>
+                    <select id="time" name="time" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline-color: #00d9b5;" required>
+                        <option value="">Select a time</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="14:30">02:30 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="15:30">03:30 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                        <option value="16:30">04:30 PM</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="notes" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #444;">Additional Notes (Optional)</label>
+                    <textarea id="notes" 
+                              name="notes" 
+                              style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline-color: #00d9b5; min-height: 100px;" 
+                              placeholder="Describe your symptoms..."></textarea>
+                </div>
+                
+                <button type="submit" style="width: 100%; background-color: #00d9b5; color: white; border: none; padding: 14px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                    Confirm Booking
+                </button>
+                
+                <a href="{{ url_for('doctors') }}" 
+                   style="display: block; width: 100%; text-align: center; margin-top: 1rem; color: #666; text-decoration: none; font-size: 0.9rem;">
+                    &larr; Back to Doctors
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('date');
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    const tomorrow = today.toISOString().split('T')[0];
+    dateInput.setAttribute('min', tomorrow);
+});
+</script>
+{% endblock %}
